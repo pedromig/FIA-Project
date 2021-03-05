@@ -44,8 +44,7 @@ public class ResourceDetectorScript : MonoBehaviour
     {
         return angle;
     }
-
-
+    
     public float GetLinearOutput()
     {
         return strength;
