@@ -13,7 +13,7 @@ public class ResourceDetectorScript : MonoBehaviour
     public float strength;
     public float angle;
     public int numObjects;
-    public bool debug_mode;
+    public bool debugMode;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,7 +46,7 @@ public class ResourceDetectorScript : MonoBehaviour
     }
 
 
-    public float GetLinearOuput()
+    public float GetLinearOutput()
     {
         return strength;
     }
@@ -91,7 +91,7 @@ public class ResourceDetectorScript : MonoBehaviour
 
                 if (hit.transform.gameObject.CompareTag(objectTag))
                 {
-                    if (debug_mode)
+                    if (debugMode)
                     {
                         Debug.DrawRay(this.transform.position, Quaternion.AngleAxis((-angleOfSensors * i), initialTransformUp) * initialTransformFwd * hit.distance, Color.red);
                     }

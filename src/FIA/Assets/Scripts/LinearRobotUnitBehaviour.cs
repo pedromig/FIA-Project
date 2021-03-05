@@ -6,18 +6,18 @@ public class LinearRobotUnitBehaviour : RobotUnit
 {
     public float weightResource;
     public float resourceValue;
-    public float resouceAngle;
+    public float resourceAngle;
 
     void Update()
     {
 
         // get sensor data
-        resouceAngle = resourcesDetector.GetAngleToClosestResource();
+        resourceAngle = resourcesDetector.GetAngleToClosestResource();
 
-        resourceValue = weightResource * resourcesDetector.GetLinearOuput();
+        resourceValue = weightResource * resourcesDetector.GetLinearOutput();
 
         // apply to the ball
-        applyForce(resouceAngle, resourceValue); // go towards
+        ApplyForce(resourceAngle, resourceValue); // go towards
 
         
 

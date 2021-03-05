@@ -34,7 +34,7 @@ public class BlockDetectorScript : MonoBehaviour
         return angleToClosestObj;
     }
 
-    public float GetLinearOuput()
+    public float GetLinearOutput()
     {
         return strength;
     }
