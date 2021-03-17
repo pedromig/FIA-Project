@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class RobotUnit : MonoBehaviour
 {
-   
+
 
     public int resourcesGathered;
     protected Rigidbody rb;
@@ -23,7 +23,6 @@ public class RobotUnit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //strength = 0.0f;
         maxObjects = GameObject.FindGameObjectsWithTag("Pickup").Length;
         resourcesGathered = 0;
         rb = GetComponent<Rigidbody>();
@@ -38,8 +37,9 @@ public class RobotUnit : MonoBehaviour
     void FixedUpdate()
     {
         int i = 0;
-        foreach(Tuple<float,float> tmp in _listAngleStr){
-            
+        foreach (Tuple<float, float> tmp in _listAngleStr)
+        {
+
             float angle = tmp.Item1;
             float strength = tmp.Item2;
             angle *= Mathf.Deg2Rad;
@@ -48,14 +48,14 @@ public class RobotUnit : MonoBehaviour
             Vector3 forceDirection = new Vector3(xComponent, 0, zComponent);
             if (debugMode)
             {
-                Debug.DrawRay(this.transform.position, (forceDirection * (strength * speed)) , i == 0 ? Color.black :Color.magenta );
+                Debug.DrawRay(this.transform.position, (forceDirection * (strength * speed)), i == 0 ? Color.black : Color.magenta);
             }
             rb.AddForce(forceDirection * (strength * speed));
 
             i++;
         }
 
-        
+
         _listAngleStr.Clear(); // cleanup
     }
 
@@ -66,11 +66,11 @@ public class RobotUnit : MonoBehaviour
 
     void SetCountText()
     {
-        if(resourcesGathered < maxObjects)
+        if (resourcesGathered < maxObjects)
         {
             this.timeElapsed = Time.time - this.startTime;
         }
-        
+
         string minutes = ((int)(timeElapsed / 60)).ToString();
         string seconds = (timeElapsed % 60).ToString("f0");
         countText.text = "Resources Gathered: " + resourcesGathered.ToString() + "/" + maxObjects + "\nTime Elapsed: " + minutes + ":" + seconds; //start
@@ -84,7 +84,7 @@ public class RobotUnit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Pickup"))
+        if (other.gameObject.CompareTag("Pickup"))
         {
             other.gameObject.SetActive(false);
             resourcesGathered++;
