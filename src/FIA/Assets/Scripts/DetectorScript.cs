@@ -25,6 +25,7 @@ public class DetectorScript : MonoBehaviour
         float energy = ymin;
         if ((xmin <= strength) && (strength <= xmax))
         {
+            energy = strength;
             if (energy >= ymax)
                 energy = ymax;
             else if (energy <= ymin)
