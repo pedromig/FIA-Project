@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657928, g: 0.4964131, b: 0.5748174, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465794, g: 0.4964137, b: 0.5748175, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &329475854 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7314612682239532039, guid: b606527f8af28664a894844f3f526637, type: 3}
+  m_PrefabInstance: {fileID: 3671642739088144379}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec3a16dc6bfeb4c468864d89ef9d7563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &560608670 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5229371599239556071, guid: e0274b6cb11494a6ea7c4470df4f5638, type: 3}
@@ -1098,9 +1109,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angleOfSensors: 10
-  rangeOfSensors: 6
+  rangeOfSensors: 5
   strength: 0
-  angle: 0
+  angleToClosestObject: 0
   numObjects: 0
   debugMode: 1
 --- !u!114 &2110567885
@@ -1170,6 +1181,36 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3965723576953268335, guid: b606527f8af28664a894844f3f526637, type: 3}
   m_PrefabInstance: {fileID: 3671642739088144379}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &431605639287758741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431605639287758740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65e0e5ab032b177968049d1dd8bdb16d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourcesGathered: 0
+  speed: 1
+  countText: {fileID: 1286279754}
+  startTime: 0
+  timeElapsed: 0
+  resourcesDetector: {fileID: 329475854}
+  blockDetector: {fileID: 2110567884}
+  debugMode: 1
+  weightResource: 5
+  resourceValue: 0
+  resourceAngle: 0
+  weightBlock: -15
+  blockValue: 0
+  blockAngle: 0
+  xmin: 0
+  xmax: 1
+  ymin: 0
+  ymax: 1
 --- !u!1001 &3671642739088144379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1181,6 +1222,10 @@ PrefabInstance:
       propertyPath: countText
       value: 
       objectReference: {fileID: 1286279754}
+    - target: {fileID: 1022615238940490695, guid: b606527f8af28664a894844f3f526637, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1022615238940490695, guid: b606527f8af28664a894844f3f526637, type: 3}
       propertyPath: blockDetector
       value: 
@@ -1232,6 +1277,14 @@ PrefabInstance:
     - target: {fileID: 7314612682239532039, guid: b606527f8af28664a894844f3f526637, type: 3}
       propertyPath: debugMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7314612682239532039, guid: b606527f8af28664a894844f3f526637, type: 3}
+      propertyPath: angleOfSensors
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7314612682239532039, guid: b606527f8af28664a894844f3f526637, type: 3}
+      propertyPath: rangeOfSensors
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8831919988329666845, guid: b606527f8af28664a894844f3f526637, type: 3}
       propertyPath: m_Name
