@@ -167,3 +167,51 @@ Received Import Request.
 Start importing Assets/Scripts/MatchMaker.cs using Guid(fec413fb4fa084e109bdb3696d044bc4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '789cfc0a6e081da0e0c198f0c13ec7b2') in 0,001539 seconds
   Import took 0,004462 seconds .
 
+========================================================================
+Received Import Request.
+  Time since last request: 1218,303878 seconds.
+  path: Assets/Scripts/Utils
+  artifactKey: Guid(4cbc37e1d5eca4c28ad3e833969a6d6a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Utils using Guid(4cbc37e1d5eca4c28ad3e833969a6d6a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '17974529cc4cb04fec32867750cff782') in 0,001332 seconds
+  Import took 0,004078 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1,808977 seconds.
+  path: Assets/Scripts/Utils/SensorController.cs
+  artifactKey: Guid(bbd500dd23fcb4511b34e450f07e86df) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Utils/SensorController.cs using Guid(bbd500dd23fcb4511b34e450f07e86df) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '979f076f0991592de8bdaee5a5d687c1') in 0,001370 seconds
+  Import took 0,004326 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0,000661 seconds.
+  path: Assets/Scripts/Utils/SensorController.cs
+  artifactKey: Guid(bbd500dd23fcb4511b34e450f07e86df) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Utils/SensorController.cs using Guid(bbd500dd23fcb4511b34e450f07e86df) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '979f076f0991592de8bdaee5a5d687c1') in 0,001245 seconds
+  Import took 0,003830 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 73,831551 seconds.
+  path: Assets/Scripts/Utils/ObjectInfo.cs
+  artifactKey: Guid(f2140c6717e404850be7feb6d9dc307f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Utils/ObjectInfo.cs using Guid(f2140c6717e404850be7feb6d9dc307f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6acee775d1fcb8fec6476d3ba7bd54a7') in 0,001973 seconds
+  Import took 0,005875 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0,749347 seconds.
+  path: Assets/Scripts/Utils/CameraController.cs
+  artifactKey: Guid(0e3ee81859e60f640af2407c4b6d2614) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Utils/CameraController.cs using Guid(0e3ee81859e60f640af2407c4b6d2614) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cdff1846a640c643eaf7cc7afb35e7f0') in 0,001595 seconds
+  Import took 0,004840 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0,002471 seconds.
+  path: Assets/Scripts/Utils/CameraController.cs
+  artifactKey: Guid(0e3ee81859e60f640af2407c4b6d2614) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Utils/CameraController.cs using Guid(0e3ee81859e60f640af2407c4b6d2614) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cdff1846a640c643eaf7cc7afb35e7f0') in 0,001297 seconds
+  Import took 0,004262 seconds .
+
