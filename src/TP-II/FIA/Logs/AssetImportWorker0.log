@@ -215,3 +215,4 @@ Received Import Request.
 Start importing Assets/Scripts/Utils/CameraController.cs using Guid(0e3ee81859e60f640af2407c4b6d2614) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cdff1846a640c643eaf7cc7afb35e7f0') in 0,001297 seconds
   Import took 0,004262 seconds .
 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
