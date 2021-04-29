@@ -37,7 +37,7 @@ public class TournamentSelection : SelectionMethod
         GeneticIndividual best = null;
         for (var i = 0; i < tournamentSize; ++i)
         {
-            GeneticIndividual individual = ((GeneticIndividual)population[Random.Range(0, population.Count) - 1]);
+            GeneticIndividual individual = ((GeneticIndividual)population[Random.Range(0, population.Count - 1)]);
             if (best == null || individual.Fitness > best.Fitness)
             {
                 best = (GeneticIndividual)individual.Clone();
