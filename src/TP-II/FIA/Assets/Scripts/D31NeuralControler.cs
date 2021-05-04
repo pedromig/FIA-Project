@@ -323,7 +323,22 @@ public class D31NeuralControler : MonoBehaviour
     // Attempt 3
 
     private float CossineLawForAngle(float a, float b, float c){
-        // For AB angle in radians -> 
+        // For AB angle in radians ->
+        // Se a bola "entrar" na baliza ou se o agente "tocar na bola", ambos são positivos
+        if (a == 0 || b == 0) 
+            return Mathf.PI; // Positive Reinforcement -> 180 degrees
+        List<float> sides = new List<float>(new float[] {a, b, c}); 
+        sides.Sort();
+        if (!(sides[2] < sides[0] + sides[1])){
+            float newValue = sides[2] - (sides[0] + sides[1]) + 0.00001f;
+            if (a == sides[0]){
+                a += newValue;
+            } else if (b == sides[0]){
+                b += newValue;
+            } else if (c == sides[0]){
+                c += newValue;
+            }
+        }
         return Mathf.Acos((a*a + b*b - c*c)/(2 * a * b));
     }
     public float GetFitness(){
