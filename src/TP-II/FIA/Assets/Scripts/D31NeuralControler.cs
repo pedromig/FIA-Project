@@ -307,17 +307,51 @@ public class D31NeuralControler : MonoBehaviour
     //+ 50 * (distanceToMyGoal.Average() - distanceToAdversaryGoal.Average())
     // + 50 * (distancefromBallToMyGoal.Average() - distancefromBallToAdversaryGoal.Average())
 
-    public float GetFitness()
-    {
-        return 2000 * GoalsOnAdversaryGoal
-               + 500 * hitTheBall
-               + 50 / distanceToBall.Average()
-               + 50 / distanceToAdversaryGoal.Average()
-               + 50 * avgSpeed
-               - 2000 * GoalsOnMyGoal
-               - 1000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
-               - 500 * hitTheWall;
+    // Attempt 2
+    // public float GetFitness()
+    // {
+    //     return 2000 * GoalsOnAdversaryGoal
+    //            + 500 * hitTheBall
+    //            + 50 / distanceToBall.Average()
+    //            + 50 / distanceToAdversaryGoal.Average()
+    //            + 50 * avgSpeed
+    //            - 2000 * GoalsOnMyGoal
+    //            - 1000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
+    //            - 500 * hitTheWall;
+    // }
+
+    // Attempt 3
+
+    private float CossineLawForAngle(float a, float b, float c){
+        // For AB angle in radians -> 
+        return Mathf.Acos((a*a + b*b - c*c)/(2 * a * b));
     }
+    public float GetFitness(){
+        float angleDegree, orientationScore = 0;
+        float epsilon = 135, infrontWeight = -1;
+        float phi = 180 - epsilon, behindWeight = 1;
+
+        for(int i = 0; i < distanceToBall.Count(); ++i) {
+            angleDegree = CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * Mathf.PI / 180;
+            if (angleDegree < epsilon) {
+                orientationScore += infrontWeight * (-1/epsilon * angleDegree + 1);
+            } else {
+                orientationScore += behindWeight * (1/phi * angleDegree + (-epsilon/phi));
+            }
+        }
+
+        // "Average" Score (distanceToBall.Count() for the number of the taken snapshots)
+        orientationScore = orientationScore/distanceToBall.Count();
+
+        return    500 * orientationScore
+                + 100 * GoalsOnAdversaryGoal
+                - 100 * GoalsOnMyGoal
+                - 70 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
+                + 50 * (hitTheBall > 0 ? 1 : 0)
+                + 5 / distancefromBallToAdversaryGoal.Average()
+                + 5 / distanceToBall.Average();
+    }
+
 
 
     // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here. 
