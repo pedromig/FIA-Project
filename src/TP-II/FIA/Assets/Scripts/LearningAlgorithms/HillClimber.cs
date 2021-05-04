@@ -10,10 +10,6 @@ public class HillClimber : MetaHeuristic
     [Header("Blue Population Parameters")]
     public float mutationProbabilityBluePopulation;
 
-
-
-
-
     public override void InitPopulation(){
 
         GamesPerIndividualForEvaluation = Mathf.Min(GamesPerIndividualForEvaluation, populationSize);

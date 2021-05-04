@@ -11,7 +11,7 @@ public abstract class MetaHeuristic : MonoBehaviour
 
     public enum MutationType { Gaussian, Random };
     public MutationType mutationMethod = MutationType.Gaussian;
-    public enum SelectionType { Tournament};
+    public enum SelectionType { Tournament };
     public SelectionType selectionMethod;
     public int populationSize;
     public int numberOfGenerations;
@@ -31,13 +31,13 @@ public abstract class MetaHeuristic : MonoBehaviour
     [HideInInspector] public int generation;
     [HideInInspector] public string logFilename;
 
-	protected List<Individual> populationRed;
+    protected List<Individual> populationRed;
     protected List<Individual> populationBlue;
     public int GamesPerIndividualForEvaluation = 1;
 
     protected int evaluatedIndividuals;
-	protected string report = "Generation,PopBestRed,PopBestBlue,PopAvgRed,PopAvgBlue,BestOverallRed,BestOverallBlue\n";
-	protected string bestRed = "";
+    protected string report = "Generation,PopBestRed,PopBestBlue,PopAvgRed,PopAvgBlue,BestOverallRed,BestOverallBlue\n";
+    protected string bestRed = "";
     protected string bestBlue = "";
     public SelectionMethod selection;
     protected string ASSETSFOLDER = "Assets/Logs/";
@@ -45,22 +45,22 @@ public abstract class MetaHeuristic : MonoBehaviour
     public string exportSuffix = "_teste";
     private string curr_folder = null;
     private string curr_time = null;
-	public Individual overallBestRed{ get; set;}
+    public Individual overallBestRed { get; set; }
     public Individual overallBestBlue { get; set; }
 
-    
+
     public void Start()
     {
-        
+
     }
 
     public List<Individual> PopulationRed
-	{
-		get
-		{
-			return populationRed;
-		}
-	}
+    {
+        get
+        {
+            return populationRed;
+        }
+    }
 
     public List<Individual> PopulationBlue
     {
@@ -71,20 +71,22 @@ public abstract class MetaHeuristic : MonoBehaviour
     }
 
     public Individual GenerationBestRed
-	{
-		get
-		{
-			float max = float.MinValue;
-			Individual max_ind = null;
-			foreach (Individual indiv in populationRed) {
-				if (indiv.Fitness > max) {
-					max = indiv.Fitness;
-					max_ind = indiv;
-				}
-			}
-			return max_ind;
-		}
-	}
+    {
+        get
+        {
+            float max = float.MinValue;
+            Individual max_ind = null;
+            foreach (Individual indiv in populationRed)
+            {
+                if (indiv.Fitness > max)
+                {
+                    max = indiv.Fitness;
+                    max_ind = indiv;
+                }
+            }
+            return max_ind;
+        }
+    }
 
     public Individual GenerationBestBlue
     {
@@ -106,16 +108,17 @@ public abstract class MetaHeuristic : MonoBehaviour
 
 
     public float PopAvgRed
-	{
-		get
-		{
-			float sum = 0.0f;
-			foreach (Individual indiv in populationRed) {
-				sum += indiv.Fitness;
-			}
-			return (sum / populationSize);
-		}
-	}
+    {
+        get
+        {
+            float sum = 0.0f;
+            foreach (Individual indiv in populationRed)
+            {
+                sum += indiv.Fitness;
+            }
+            return (sum / populationSize);
+        }
+    }
 
     public float PopAvgBlue
     {
@@ -131,21 +134,23 @@ public abstract class MetaHeuristic : MonoBehaviour
     }
 
     //Population Initilization
-    public abstract void InitPopulation ();
-	//The Step function assumes that the fitness values of all the individuals in the population have been calculated.
-	public abstract void Step();
+    public abstract void InitPopulation();
+    //The Step function assumes that the fitness values of all the individuals in the population have been calculated.
+    public abstract void Step();
 
 
-	public void updateReport() {
-		if (overallBestRed == null || overallBestRed.Fitness < GenerationBestRed.Fitness) {
-			overallBestRed = GenerationBestRed.Clone();
-            //Debug.Log("Iteration " + generation + " Fitness " + overallBestRed.Fitness + " Best Red\n" + overallBestRed);
-		}
+    public void updateReport()
+    {
+        if (overallBestRed == null || overallBestRed.Fitness < GenerationBestRed.Fitness)
+        {
+            overallBestRed = GenerationBestRed.Clone();
+            // Debug.Log("Iteration " + generation + " Fitness " + overallBestRed.Fitness + " Best Red\n" + overallBestRed);
+        }
 
         if (overallBestBlue == null || overallBestBlue.Fitness < GenerationBestBlue.Fitness)
         {
             overallBestBlue = GenerationBestBlue.Clone();
-            //Debug.Log("Iteration " + generation + " Fitness " + overallBestBlue.Fitness + " Best Blue\n" + overallBestBlue);
+            // Debug.Log("Iteration " + generation + " Fitness " + overallBestBlue.Fitness + " Best Blue\n" + overallBestBlue);
         }
 
         curr_time = System.DateTime.Now.ToString("MM-dd-HH-mm-ss");
@@ -158,7 +163,7 @@ public abstract class MetaHeuristic : MonoBehaviour
             }
 
         }
-        if ((generation == 0 || (generation+1) % exportEveryNGenerations == 0 || generation+1 == numberOfGenerations) && !Directory.Exists(ASSETSFOLDER + curr_folder + "/" + generation))
+        if ((generation == 0 || (generation + 1) % exportEveryNGenerations == 0 || generation + 1 == numberOfGenerations) && !Directory.Exists(ASSETSFOLDER + curr_folder + "/" + generation))
         {
             Directory.CreateDirectory(ASSETSFOLDER + curr_folder + "/" + generation);
 
@@ -191,8 +196,7 @@ public abstract class MetaHeuristic : MonoBehaviour
         bestBlue = overallBestBlue.ToString();
         string line = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", generation, populationBestRed, populationBestBlue, PopAvgRed, PopAvgBlue, overallBestRed.Fitness, overallBestBlue.Fitness);
         report += line;
-        //Debug.Log (report);
-        Debug.Log(line);
+        Debug.Log(report + "\n" + line);
     }
 
     public void ResetBestOverall()
@@ -207,7 +211,7 @@ public abstract class MetaHeuristic : MonoBehaviour
             }
 
         }
-        
+
         if (!Directory.Exists(ASSETSFOLDER + curr_folder + "/best/"))
         {
             Directory.CreateDirectory(ASSETSFOLDER + curr_folder + "/best/");
@@ -220,22 +224,23 @@ public abstract class MetaHeuristic : MonoBehaviour
         writeToFile(curr_folder + "EvolutionaryStatistics_partial.csv", report, false);
     }
 
-    public void dumpStats() {
+    public void dumpStats()
+    {
         curr_time = System.DateTime.Now.ToString("MM-dd-HH-mm-ss");
         if (this.curr_folder == null)
         {
-            this.curr_folder = this.curr_time+exportSuffix+"/";
+            this.curr_folder = this.curr_time + exportSuffix + "/";
             if (!Directory.Exists(ASSETSFOLDER + curr_folder))
             {
                 Directory.CreateDirectory(ASSETSFOLDER + curr_folder);
             }
         }
-		writeToFile (curr_folder + string.Format ("EvolutionaryStatistics_{0}_gen_{1}.csv", curr_time, generation), report,true);
-		writeToFile(curr_folder + string.Format ("EvolutionaryRunBest_Red_{0}_gen_{1}.txt", curr_time, generation), bestRed,false);
-        writeToFile(curr_folder + string.Format("EvolutionaryRunBest_Blue_{0}_gen_{1}.txt", curr_time, generation), bestBlue,false);
-        dumpIndividual(curr_folder + string.Format ("Best_Red_{0}_gen_{1}.dat", curr_time, generation), overallBestRed);
+        writeToFile(curr_folder + string.Format("EvolutionaryStatistics_{0}_gen_{1}.csv", curr_time, generation), report, true);
+        writeToFile(curr_folder + string.Format("EvolutionaryRunBest_Red_{0}_gen_{1}.txt", curr_time, generation), bestRed, false);
+        writeToFile(curr_folder + string.Format("EvolutionaryRunBest_Blue_{0}_gen_{1}.txt", curr_time, generation), bestBlue, false);
+        dumpIndividual(curr_folder + string.Format("Best_Red_{0}_gen_{1}.dat", curr_time, generation), overallBestRed);
         dumpIndividual(curr_folder + string.Format("Best_Blue_{0}_gen_{1}.dat", curr_time, generation), overallBestBlue);
-	}
+    }
 
     private void writeToFile(string path, string data, bool append)
     {
@@ -244,7 +249,8 @@ public abstract class MetaHeuristic : MonoBehaviour
         writer.Close();
     }
 
-    public void dumpIndividual(string path, Individual ind) {
+    public void dumpIndividual(string path, Individual ind)
+    {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(ASSETSFOLDER + path);
         bf.Serialize(file, ind.getIndividualController());

@@ -18,6 +18,29 @@ public class GeneticAlgorithm : MetaHeuristic
     public float crossoverProbabilityBluePopulation;
     public bool elitistBlue = true;
 
+    private void Start()
+    {
+        Debug.Log("############# Genetic Algorithm Settings ###################");
+
+        Debug.Log("Global Settings");
+        Debug.Log("     Mutation Method: " + mutationMethod);
+        Debug.Log("     Selection Method: " + selectionMethod);
+        Debug.Log("     Population Size: " + populationSize);
+        Debug.Log("     Number of Generation: " + numberOfGenerations);
+
+        Debug.Log("Red Population Settings");
+        Debug.Log("     Mutation Probability: " + mutationProbabilityRedPopulation);
+        Debug.Log("     Crossover Probability: " + crossoverProbabilityRedPopulation);
+        Debug.Log("     Elitist: " + elitistRed);
+
+        Debug.Log("Blue Population Settings");
+        Debug.Log("     Mutation Probability: " + mutationProbabilityBluePopulation);
+        Debug.Log("     Crossover Probability: " + crossoverProbabilityBluePopulation);
+        Debug.Log("     Elitist: " + elitistBlue);
+
+        Debug.Log("#################################################################");
+    }
+
     public override void InitPopulation()
     {
         GamesPerIndividualForEvaluation = Mathf.Min(GamesPerIndividualForEvaluation, populationSize);
@@ -155,7 +178,7 @@ public class GeneticAlgorithm : MetaHeuristic
         generation++;
         if (generation == numberOfGenerations) // no need to execute the step if we reached max generation
             return;
-        
+
         List<Individual> newPopRed;
         List<Individual> newPopBlue;
 
@@ -201,6 +224,6 @@ public class GeneticAlgorithm : MetaHeuristic
     }
 
 
-    
+
 
 }

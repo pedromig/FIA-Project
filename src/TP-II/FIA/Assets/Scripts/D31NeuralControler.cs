@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class D31NeuralControler : MonoBehaviour
 {
     public RobotUnit agent; // the agent controller we want to use
@@ -14,7 +13,7 @@ public class D31NeuralControler : MonoBehaviour
     public GameObject Adversary;
     public GameObject ScoreSystem;
 
-    
+
     public int numberOfInputSensores { get; private set; }
     public float[] sensorsInput;
 
@@ -32,7 +31,7 @@ public class D31NeuralControler : MonoBehaviour
     public List<float> agentSpeed;
     public List<float> ballSpeed;
     public List<float> advSpeed;
-    private float FIELD_SIZE =95.0f;
+    private float FIELD_SIZE = 95.0f;
     //
     public float simulationTime = 0;
     public float distanceTravelled = 0.0f;
@@ -75,10 +74,11 @@ public class D31NeuralControler : MonoBehaviour
         previousPos = startPos;
         // 2021
         ballPreviousPos = ball.transform.localPosition;
-        if (Adversary !=null) { 
+        if (Adversary != null)
+        {
             advPreviousPos = Adversary.transform.localPosition;
         }
-        
+
         //Debug.Log(this.neuralController);
         if (GameFieldDebugMode && this.neuralController.weights == null)
         {
@@ -102,7 +102,7 @@ public class D31NeuralControler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(countFrames == 0 && ball != null)
+        if (countFrames == 0 && ball != null)
         {
             ballStartPos = ball.transform.localPosition;
             ballPreviousPos = ballStartPos;
@@ -117,19 +117,19 @@ public class D31NeuralControler : MonoBehaviour
             // move
             result = this.neuralController.process(sensorsInput);
             float angle = result[0] * 180;
-            float strength = result[1];            
+            float strength = result[1];
             Vector3 dir = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.up;
             dir.z = dir.y;
             dir.y = 0;
 
 
 
-            /** DEBUG **
+
             // debug raycast for the force and angle being applied on the agent
             Vector3 rayDirection = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.up;
             rayDirection.z = rayDirection.y;
             rayDirection.y = 0;
-            
+
             if (strength > 0)
             {
                 Debug.DrawRay(this.transform.position, -rayDirection.normalized * 5, Color.black);
@@ -137,15 +137,15 @@ public class D31NeuralControler : MonoBehaviour
             else
             {
                 Debug.DrawRay(this.transform.position, rayDirection.normalized * 5, Color.black);
-            }*/
+            }
 
-            agent.rb.AddForce(dir * strength * agent.speed); 
-            
+            agent.rb.AddForce(dir * strength * agent.speed);
+
 
             // updating game status
             updateGameStatus();
 
-            
+
             // check method
             if (endSimulationConditions())
             {
@@ -177,8 +177,8 @@ public class D31NeuralControler : MonoBehaviour
             sensorsInput[6] = -1;// -1 == não existe
             sensorsInput[7] = -1;// -1 == não existe
         }
-        sensorsInput[8] = Mathf.CeilToInt(Vector3.Distance(ball.transform.localPosition, MyGoal.transform.localPosition)) / FIELD_SIZE; 
-        sensorsInput[9] = Mathf.CeilToInt(Vector3.Distance(ball.transform.localPosition, AdversaryGoal.transform.localPosition)) / FIELD_SIZE; 
+        sensorsInput[8] = Mathf.CeilToInt(Vector3.Distance(ball.transform.localPosition, MyGoal.transform.localPosition)) / FIELD_SIZE;
+        sensorsInput[9] = Mathf.CeilToInt(Vector3.Distance(ball.transform.localPosition, AdversaryGoal.transform.localPosition)) / FIELD_SIZE;
         sensorsInput[10] = objects["Wall"].distance / FIELD_SIZE;
         sensorsInput[11] = objects["Wall"].angle / 360.0f;
 
@@ -291,20 +291,45 @@ public class D31NeuralControler : MonoBehaviour
         return simulationTime > this.maxSimulTime;
     }
 
-    public float GetScoreBlue()
+    // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here.  7
+
+
+
+    //  Attempt 1: float fitness = distanceTravelled + hitTheBall + GoalsOnAdversaryGoal - distancefromBallToAdversaryGoal.Sum() - GoalsOnMyGoal;
+
+    // float fitness = 500 * GoalsOnAdversaryGoal
+    //                     - 500 * GoalsOnMyGoal +
+    //                     200 * hitTheBall +
+    //                     100 * Math.Min((float)Math.E, -Mathf.Log10(distanceToBall.Sum())) +
+    //                     100 * Math.Min((float)Math.E, -Mathf.Log10(distancefromBallToAdversaryGoal.Sum()));
+
+    // Ideias
+    //+ 50 * (distanceToMyGoal.Average() - distanceToAdversaryGoal.Average())
+    // + 50 * (distancefromBallToMyGoal.Average() - distancefromBallToAdversaryGoal.Average())
+
+    public float GetFitness()
     {
-        // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here.  
-        //* YOUR CODE HERE*//
-        float fitness = distanceTravelled;
-        return fitness;
+        return 2000 * GoalsOnAdversaryGoal
+               + 500 * hitTheBall
+               + 50 / distanceToBall.Average()
+               + 50 / distanceToAdversaryGoal.Average()
+               + 50 * avgSpeed
+               - 2000 * GoalsOnMyGoal
+               - 1000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
+               - 500 * hitTheWall;
     }
 
+
+    // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here. 
+    public float GetScoreBlue()
+    {
+        return GetFitness();
+    }
+
+    // Fitness function for the Red player. The code to attribute fitness to individuals should be written here. 
     public float GetScoreRed()
     {
-        // Fitness function for the Red player. The code to attribute fitness to individuals should be written here. 
-        //* YOUR CODE HERE*//
-        float fitness = distanceTravelled;
-        return fitness;
+        return GetFitness();
     }
 
 }
