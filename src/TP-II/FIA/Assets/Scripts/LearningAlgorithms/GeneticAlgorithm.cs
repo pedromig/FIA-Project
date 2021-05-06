@@ -26,7 +26,8 @@ public class GeneticAlgorithm : MetaHeuristic
         Debug.Log("     Mutation Method: " + mutationMethod);
         Debug.Log("     Selection Method: " + selectionMethod);
         Debug.Log("     Population Size: " + populationSize);
-        Debug.Log("     Number of Generation: " + numberOfGenerations);
+        Debug.Log("     Number of Generations: " + numberOfGenerations);
+        Debug.Log("     Tournament Size: " + tournamentSize);
 
         Debug.Log("Red Population Settings");
         Debug.Log("     Mutation Probability: " + mutationProbabilityRedPopulation);
