@@ -347,7 +347,7 @@ public class D31NeuralControler : MonoBehaviour
         float phi = 180 - epsilon, behindWeight = 1;
 
         for(int i = 0; i < distanceToBall.Count(); ++i) {
-            angleDegree = CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * Mathf.PI / 180;
+            angleDegree = (CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * 180) / Mathf.PI;
             if (angleDegree < epsilon) {
                 orientationScore += infrontWeight * (-1/epsilon * angleDegree + 1);
             } else {
