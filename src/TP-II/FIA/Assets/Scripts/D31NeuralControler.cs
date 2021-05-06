@@ -325,7 +325,7 @@ public class D31NeuralControler : MonoBehaviour
     private float CossineLawForAngle(float a, float b, float c){
         // For AB angle in radians ->
         // Se a bola "entrar" na baliza ou se o agente "tocar na bola", ambos são positivos
-        if (a == 0 || b == 0) 
+        if (a == 0 || b == 0) //TODO: verify if this is correct
             return Mathf.PI; // Positive Reinforcement -> 180 degrees
         List<float> sides = new List<float>(new float[] {a, b, c}); 
         sides.Sort();
@@ -359,10 +359,10 @@ public class D31NeuralControler : MonoBehaviour
         orientationScore = orientationScore/distanceToBall.Count();
 
         return    500 * orientationScore
-                + 100 * GoalsOnAdversaryGoal
-                - 100 * GoalsOnMyGoal
-                - 70 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
-                + 50 * (hitTheBall > 0 ? 1 : 0)
+                + 10000 * GoalsOnAdversaryGoal
+                - 10000 * GoalsOnMyGoal
+                - 7000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
+                + 50 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
                 + 5 / distancefromBallToAdversaryGoal.Average()
                 + 5 / distanceToBall.Average();
     }
