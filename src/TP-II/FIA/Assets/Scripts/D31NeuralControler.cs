@@ -341,12 +341,39 @@ public class D31NeuralControler : MonoBehaviour
         }
         return Mathf.Acos((a*a + b*b - c*c)/(2 * a * b));
     }
+    // public float GetFitness(){
+    //     float angleDegree, orientationScore = 0;
+    //     float epsilon = 160, phi = 180 - epsilon;
+
+    //     for(int i = 0; i < distanceToBall.Count(); ++i) {
+    //         angleDegree = (CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * 180) / Mathf.PI;
+    //         if (angleDegree < epsilon) {
+    //             orientationScore += -(-1/epsilon * angleDegree + 1);
+    //         } else {
+    //             orientationScore += (1/phi * angleDegree + (-epsilon/phi));
+    //         }
+    //     }
+
+    //     // "Average" Score (distanceToBall.Count() for the number of the taken snapshots)
+    //     orientationScore = orientationScore/distanceToBall.Count();
+
+    //     return    50 * orientationScore
+    //             + 10000 * GoalsOnAdversaryGoal
+    //             - 10000 * GoalsOnMyGoal
+    //             - 7000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
+    //             + 5 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
+    //             + 5 / distancefromBallToAdversaryGoal.Average()
+    //             - 5 / distancefromBallToMyGoal.Average()
+    //             + 5 / distanceToBall.Average();
+    // }
+
+        /* Defender - Attempt 1 */
     public float GetFitness(){
         float angleDegree, orientationScore = 0;
-        float epsilon = 160, phi = 180 - epsilon;
+        float epsilon = 175, phi = 180 - epsilon;
 
         for(int i = 0; i < distanceToBall.Count(); ++i) {
-            angleDegree = (CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * 180) / Mathf.PI;
+            angleDegree = (CossineLawForAngle(distanceToMyGoal[i], distanceToBall[i], distancefromBallToMyGoal[i]) * 180) / Mathf.PI;
             if (angleDegree < epsilon) {
                 orientationScore += -(-1/epsilon * angleDegree + 1);
             } else {
@@ -358,15 +385,14 @@ public class D31NeuralControler : MonoBehaviour
         orientationScore = orientationScore/distanceToBall.Count();
 
         return    50 * orientationScore
-                + 10000 * GoalsOnAdversaryGoal
-                - 10000 * GoalsOnMyGoal
-                - 7000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
+                + 5000 * GoalsOnAdversaryGoal
+                - 20000 * GoalsOnMyGoal
+                + 7000 * (GoalsOnMyGoal == 0 ? 1 : 0)
                 + 5 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
                 + 5 / distancefromBallToAdversaryGoal.Average()
                 - 5 / distancefromBallToMyGoal.Average()
                 + 5 / distanceToBall.Average();
     }
-
 
 
     // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here. 
