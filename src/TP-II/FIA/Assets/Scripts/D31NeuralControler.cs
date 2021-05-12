@@ -287,7 +287,8 @@ public class D31NeuralControler : MonoBehaviour
     private bool endSimulationConditions()
     {
         // You can modify this to change the length of the simulation of an individual before evaluating it.
-        maxSimulTime = 25;
+        // maxSimulTime = 25;
+        maxSimulTime = 5;
         return simulationTime > this.maxSimulTime;
     }
 
@@ -386,8 +387,7 @@ public class D31NeuralControler : MonoBehaviour
 
         return    50 * orientationScore
                 + 5000 * GoalsOnAdversaryGoal
-                - 20000 * GoalsOnMyGoal
-                + 7000 * (GoalsOnMyGoal == 0 ? 1 : 0)
+                + 7000 * (GoalsOnMyGoal == 0 ? 1 : -Mathf.Log10(GoalsOnMyGoal))
                 + 5 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
                 + 5 / distancefromBallToAdversaryGoal.Average()
                 - 5 / distancefromBallToMyGoal.Average()
