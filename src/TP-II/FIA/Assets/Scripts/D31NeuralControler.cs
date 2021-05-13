@@ -385,14 +385,14 @@ public class D31NeuralControler : MonoBehaviour
         // "Average" Score (distanceToBall.Count() for the number of the taken snapshots)
         orientationScore = orientationScore/distanceToBall.Count();
 
-        return    50 * orientationScore
-                + 5000 * GoalsOnAdversaryGoal
-                - 20000 * GoalsOnMyGoal
-                + 7000 * (GoalsOnMyGoal == 0 ? 1 : 0)
-                + 5 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
+        return    1000 * orientationScore
+                - 10000 * GoalsOnMyGoal
+                + 10000 * (GoalsOnMyGoal == 0 ? 1 : 0)
+                + 50 * hitTheBall
                 + 5 / distancefromBallToAdversaryGoal.Average()
-                - 5 / distancefromBallToMyGoal.Average()
-                + 5 / distanceToBall.Average();
+                - 50 / distancefromBallToMyGoal.Average()
+                + 50 / distanceToBall.Average()
+                + 100 * avgSpeed;
     }
 
 
