@@ -16,7 +16,7 @@ public abstract class MetaHeuristic : MonoBehaviour
 
     public enum SelectionType { Tournament };
     public SelectionType selectionMethod;
-    
+
     public int populationSize;
     public int numberOfGenerations;
 
@@ -54,7 +54,7 @@ public abstract class MetaHeuristic : MonoBehaviour
     public Individual overallBestBlue { get; set; }
 
 
-    public void Start()
+    public virtual void Start()
     {
 
     }

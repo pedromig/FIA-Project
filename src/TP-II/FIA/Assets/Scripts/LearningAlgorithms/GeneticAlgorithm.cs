@@ -18,7 +18,7 @@ public class GeneticAlgorithm : MetaHeuristic
     public float crossoverProbabilityBluePopulation;
     public bool elitistBlue = true;
 
-    private void Start()
+    public override void Start()
     {
         Debug.Log("############# Genetic Algorithm Settings ###################");
 
