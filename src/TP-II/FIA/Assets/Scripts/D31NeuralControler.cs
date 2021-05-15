@@ -59,8 +59,6 @@ public class D31NeuralControler : MonoBehaviour
     public int GoalsOnMyGoal;
     public float[] result;
 
-
-
     public NeuralNetwork neuralController;
 
     private void Awake()
@@ -123,8 +121,6 @@ public class D31NeuralControler : MonoBehaviour
             dir.y = 0;
 
 
-
-
             // debug raycast for the force and angle being applied on the agent
             Vector3 rayDirection = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.up;
             rayDirection.z = rayDirection.y;
@@ -132,7 +128,7 @@ public class D31NeuralControler : MonoBehaviour
 
             if (strength > 0)
             {
-                Debug.DrawRay(this.transform.position, -rayDirection.normalized * 5, Color.black);
+                Debug.DrawRay(this.transform.position, -rayDirection.normalized * 5, Color.cyan);
             }
             else
             {
@@ -245,7 +241,6 @@ public class D31NeuralControler : MonoBehaviour
             advPreviousPos = Adversary.transform.localPosition;
         }
 
-
         // get my score
         GoalsOnMyGoal = ScoreSystem.GetComponent<ScoreKeeper>().score[player == 0 ? 1 : 0];
         // get adversary score
@@ -280,85 +275,67 @@ public class D31NeuralControler : MonoBehaviour
         }
         return ret;
     }
+    private float CossineLawForAngle(float a, float b, float c)
+    {
+        // For AB angle in radians ->
+        // Se a bola "entrar" na baliza ou se o agente "tocar na bola", ambos são positivos
+        if (a == 0 || b == 0)
+            return Mathf.PI; // Positive Reinforcement -> 180 degrees
+        List<float> sides = new List<float>(new float[] { a, b, c });
+        sides.Sort();
+        if (!(sides[2] < sides[0] + sides[1]))
+        {
+            float newValue = sides[2] - (sides[0] + sides[1]) + 0.00001f;
+            if (a == sides[0])
+            {
+                a += newValue;
+            }
+            else if (b == sides[0])
+            {
+                b += newValue;
+            }
+            else if (c == sides[0])
+            {
+                c += newValue;
+            }
+        }
+        return Mathf.Acos((a * a + b * b - c * c) / (2 * a * b));
+    }
+
 
     //******************************************************************************************
     //* FITNESS AND END SIMULATION CONDITIONS *// 
     //******************************************************************************************
     private bool endSimulationConditions()
     {
-        // You can modify this to change the length of the simulation of an individual before evaluating it.
-        maxSimulTime = 25;
         return simulationTime > this.maxSimulTime;
     }
 
-    // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here.  7
+    // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here. 
 
-
-
-    //  Attempt 1: float fitness = distanceTravelled + hitTheBall + GoalsOnAdversaryGoal - distancefromBallToAdversaryGoal.Sum() - GoalsOnMyGoal;
-
-    // float fitness = 500 * GoalsOnAdversaryGoal
-    //                     - 500 * GoalsOnMyGoal +
-    //                     200 * hitTheBall +
-    //                     100 * Math.Min((float)Math.E, -Mathf.Log10(distanceToBall.Sum())) +
-    //                     100 * Math.Min((float)Math.E, -Mathf.Log10(distancefromBallToAdversaryGoal.Sum()));
-
-    // Ideias
-    //+ 50 * (distanceToMyGoal.Average() - distanceToAdversaryGoal.Average())
-    // + 50 * (distancefromBallToMyGoal.Average() - distancefromBallToAdversaryGoal.Average())
-
-    // Attempt 2
-    // public float GetFitness()
-    // {
-    //     return 2000 * GoalsOnAdversaryGoal
-    //            + 500 * hitTheBall
-    //            + 50 / distanceToBall.Average()
-    //            + 50 / distanceToAdversaryGoal.Average()
-    //            + 50 * avgSpeed
-    //            - 2000 * GoalsOnMyGoal
-    //            - 1000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
-    //            - 500 * hitTheWall;
-    // }
-
-    // Attempt 3
-
-    private float CossineLawForAngle(float a, float b, float c){
-        // For AB angle in radians ->
-        // Se a bola "entrar" na baliza ou se o agente "tocar na bola", ambos são positivos
-        if (a == 0 || b == 0) 
-            return Mathf.PI; // Positive Reinforcement -> 180 degrees
-        List<float> sides = new List<float>(new float[] {a, b, c}); 
-        sides.Sort();
-        if (!(sides[2] < sides[0] + sides[1])){
-            float newValue = sides[2] - (sides[0] + sides[1]) + 0.00001f;
-            if (a == sides[0]){
-                a += newValue;
-            } else if (b == sides[0]){
-                b += newValue;
-            } else if (c == sides[0]){
-                c += newValue;
-            }
-        }
-        return Mathf.Acos((a*a + b*b - c*c)/(2 * a * b));
-    }
-    public float GetFitness(){
+    public float GetFitness()
+    {
         float angleDegree, orientationScore = 0;
         float epsilon = 135, infrontWeight = -1;
         float phi = 180 - epsilon, behindWeight = 1;
 
-        for(int i = 0; i < distanceToBall.Count(); ++i) {
+        for (int i = 0; i < distanceToBall.Count(); ++i)
+        {
             angleDegree = CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * Mathf.PI / 180;
-            if (angleDegree < epsilon) {
-                orientationScore += infrontWeight * (-1/epsilon * angleDegree + 1);
-            } else {
-                orientationScore += behindWeight * (1/phi * angleDegree + (-epsilon/phi));
+            if (angleDegree < epsilon)
+            {
+                orientationScore += infrontWeight * (-1 / epsilon * angleDegree + 1);
+            }
+            else
+            {
+                orientationScore += behindWeight * (1 / phi * angleDegree + (-epsilon / phi));
             }
         }
 
         // "Average" Score (distanceToBall.Count() for the number of the taken snapshots)
-        orientationScore = orientationScore/distanceToBall.Count();
+        orientationScore = orientationScore / distanceToBall.Count();
 
-        return    500 * orientationScore
+        return 500 * orientationScore
                 + 100 * GoalsOnAdversaryGoal
                 - 100 * GoalsOnMyGoal
                 - 70 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
@@ -366,7 +343,6 @@ public class D31NeuralControler : MonoBehaviour
                 + 5 / distancefromBallToAdversaryGoal.Average()
                 + 5 / distanceToBall.Average();
     }
-
 
 
     // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here. 

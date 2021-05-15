@@ -31,7 +31,7 @@ public class TournamentSelection : SelectionMethod
     // DESCRIPTION:
     // A random individual is selected and competes with the best individual found in the population so far 
     // If the best performant individual hasn't been  found then the the first randomly picked individual will become it.
-    // The algorithm returns the best individual found in all of the tournamentSize iterations .
+    // The algorithm returns the best individual found in all of the tournamentSize iterations.
     public Individual tournamentSelection(List<Individual> population, int tournamentSize)
     {
         GeneticIndividual best = null;

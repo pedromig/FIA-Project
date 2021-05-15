@@ -6,7 +6,8 @@ public abstract class Individual {
 
 	protected float[] genotype;
 	protected MetaHeuristic.MutationType mutation;
-	protected int[] topology;
+    protected MetaHeuristic.CrossoverType crossover;
+    protected int[] topology;
 
 	protected int totalSize = 0;
 	protected float fitness;

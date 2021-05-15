@@ -6,8 +6,6 @@ using static MetaHeuristic;
 
 public class GeneticIndividual : Individual
 {
-
-
     public GeneticIndividual(int[] topology, int numberOfEvaluations, MutationType mutation) : base(topology, numberOfEvaluations, mutation)
     {
     }
@@ -48,6 +46,7 @@ public class GeneticIndividual : Individual
     }
 
 
+    // Mutation Implementations.
     public override void Mutate(float probability)
     {
         switch (mutation)
@@ -60,6 +59,12 @@ public class GeneticIndividual : Individual
                 break;
         }
     }
+
+    // Uniform Mutation
+    // DESCRIPTION:
+    // Mutate all the genes in the individual uniformly. The mutation occurrence is determined by
+    // a certain user defined probability. The value for a given gene is a uniformly picked 
+    // value from the range [-1.0f, 1.0f].
     public void MutateRandom(float probability)
     {
         for (int i = 0; i < totalSize; i++)
@@ -71,7 +76,11 @@ public class GeneticIndividual : Individual
         }
     }
 
-
+    // NonUniform Mutation (Gaussian)
+    // DESCRIPTION:
+    // Mutate all the genes in the individual non uniformly. The mutation occurrence is determined by
+    // a certain user defined probability. The value for a given gene is value from the range [-1.0f, 1.0f]
+    // that is picked according to a non-uniform gaussian distribution.
     public void MutateGaussian(float probability)
     {
         float mean = 0;
@@ -85,12 +94,26 @@ public class GeneticIndividual : Individual
         }
     }
 
+    // Crossover Implementations
+    public override void Crossover(Individual partner, float probability)
+    {
+        switch (crossover)
+        {
+            case MetaHeuristic.CrossoverType.OnePoint:
+                Crossover1(partner, probability);
+                break;
+            case MetaHeuristic.CrossoverType.TwoPoint:
+                Crossover2(partner, probability);
+                break;
+        }
+    }
+
 
     // Single-point crossover
     // DESCRIPTION:
     // A point on both parents' chromosomes is picked randomly, and designated a 'crossover point'.
     // Bits to the right of that point are swapped between the two parent chromosomes.
-    public override void Crossover(Individual partner, float probability)
+    public void Crossover1(Individual partner, float probability)
     {
         GeneticIndividual other = ((GeneticIndividual)partner);
         if (Random.Range(0.0f, 1.0f) < probability)
@@ -124,7 +147,6 @@ public class GeneticIndividual : Individual
                 other.genotype[i] = tmp;
             }
         }
-
     }
 
 

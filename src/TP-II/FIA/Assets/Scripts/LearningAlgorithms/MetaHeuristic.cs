@@ -10,11 +10,16 @@ public abstract class MetaHeuristic : MonoBehaviour
 {
 
     public enum MutationType { Gaussian, Random };
+    public enum CrossoverType { OnePoint, TwoPoint };
     public MutationType mutationMethod = MutationType.Gaussian;
+    public CrossoverType crossoverMethod = CrossoverType.OnePoint;
+
     public enum SelectionType { Tournament };
     public SelectionType selectionMethod;
+    
     public int populationSize;
     public int numberOfGenerations;
+
     [Header("Neural Network")]
     public int[] NNTopology;
     [Header("Load from File")]

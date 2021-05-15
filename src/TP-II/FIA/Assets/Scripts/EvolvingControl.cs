@@ -43,9 +43,6 @@ public class MatchPair
 public class EvolvingControl : MonoBehaviour
 {
 
-
-
-
     // instances
     public static EvolvingControl instance = null;
     [HideInInspector]
@@ -71,7 +68,10 @@ public class EvolvingControl : MonoBehaviour
     public bool randomBluePlayerPosition = true;
     public bool randomBallPosition = true;
     public bool movingBall = true;
-    public int ChangePositionsEveryNGen;
+    public int ChangePositionsEveryNGen = 10;
+
+    public float maxSimulationTime = 25.0f;
+
     protected Vector3 redPlayerStartPosition;
     protected Vector3 ballStartPosition;
     protected Vector3 bluePlayerStartPosition;
@@ -105,14 +105,16 @@ public class EvolvingControl : MonoBehaviour
         Debug.Log("Ball Settings");
         Debug.Log("     Random Ball Position: " + randomBallPosition);
         Debug.Log("     Moving Ball: " + movingBall);
+
+        Debug.Log("Simulation Settings");
         Debug.Log("     Change Position Every N Gen: " + ChangePositionsEveryNGen);
+        Debug.Log("     Max Simulation Time: " + maxSimulationTime);
 
         Debug.Log("#################################################################");
     }
 
     void Awake()
     {
-        // deal with the singleton part
         if (instance == null)
         {
             instance = this;
@@ -235,12 +237,14 @@ public class EvolvingControl : MonoBehaviour
         {
 
             redPlayerScript = sim.transform.Find("D31-red").gameObject.transform.Find("Body").gameObject.GetComponent<D31NeuralControler>();
+            redPlayerScript.maxSimulTime = maxSimulationTime;
 
         }
 
         if (sim.transform.Find("D31-blue") != null)
         {
             bluePlayerScript = sim.transform.Find("D31-blue").gameObject.transform.Find("Body").gameObject.GetComponent<D31NeuralControler>();
+            bluePlayerScript.maxSimulTime = maxSimulationTime;
 
         }
         sim.name = "Blue " + indexIndBlue + " vs Red " + indexIndRed;
@@ -249,10 +253,12 @@ public class EvolvingControl : MonoBehaviour
         if (redPlayerScript != null && redPlayerScript.enabled)
         {
             redPlayerScript.neuralController = metaengine.PopulationRed[indexIndRed].getIndividualController();
+            redPlayerScript.maxSimulTime = maxSimulationTime;
         }
         if (bluePlayerScript != null && bluePlayerScript.enabled)
         {
             bluePlayerScript.neuralController = metaengine.PopulationBlue[indexIndBlue].getIndividualController();
+            bluePlayerScript.maxSimulTime = maxSimulationTime;
         }
 
         return new SimulationInfo(sim, redPlayerScript, bluePlayerScript, indexIndRed, indexIndBlue);
