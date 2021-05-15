@@ -275,6 +275,7 @@ public class D31NeuralControler : MonoBehaviour
         }
         return ret;
     }
+
     private float CossineLawForAngle(float a, float b, float c)
     {
         // For AB angle in radians ->
@@ -316,31 +317,31 @@ public class D31NeuralControler : MonoBehaviour
     public float GetFitness()
     {
         float angleDegree, orientationScore = 0;
-        float epsilon = 135, infrontWeight = -1;
-        float phi = 180 - epsilon, behindWeight = 1;
+        float epsilon = 160, phi = 180 - epsilon;
 
         for (int i = 0; i < distanceToBall.Count(); ++i)
         {
-            angleDegree = CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * Mathf.PI / 180;
+            angleDegree = (CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * 180) / Mathf.PI;
             if (angleDegree < epsilon)
             {
-                orientationScore += infrontWeight * (-1 / epsilon * angleDegree + 1);
+                orientationScore += -(-1 / epsilon * angleDegree + 1);
             }
             else
             {
-                orientationScore += behindWeight * (1 / phi * angleDegree + (-epsilon / phi));
+                orientationScore += (1 / phi * angleDegree + (-epsilon / phi));
             }
         }
 
         // "Average" Score (distanceToBall.Count() for the number of the taken snapshots)
         orientationScore = orientationScore / distanceToBall.Count();
 
-        return    500 * orientationScore
+        return 50 * orientationScore
                 + 10000 * GoalsOnAdversaryGoal
                 - 10000 * GoalsOnMyGoal
                 - 7000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
-                + 50 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
+                + 5 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
                 + 5 / distancefromBallToAdversaryGoal.Average()
+                - 5 / distancefromBallToMyGoal.Average()
                 + 5 / distanceToBall.Average();
     }
 

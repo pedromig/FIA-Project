@@ -98,6 +98,8 @@ public class EvolvingControl : MonoBehaviour
     {
         Debug.Log("############# Scene Settings ###################");
 
+        Debug.Log("Seed: " + RandomSeed);
+
         Debug.Log("Player Settings");
         Debug.Log("     Random Red Player: " + randomRedPlayerPosition);
         Debug.Log("     Random Blue Player: " + randomBluePlayerPosition);
