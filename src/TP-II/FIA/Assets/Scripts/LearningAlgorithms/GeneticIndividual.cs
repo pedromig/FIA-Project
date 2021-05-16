@@ -6,7 +6,7 @@ using static MetaHeuristic;
 
 public class GeneticIndividual : Individual
 {
-    public GeneticIndividual(int[] topology, int numberOfEvaluations, MutationType mutation) : base(topology, numberOfEvaluations, mutation)
+    public GeneticIndividual(int[] topology, int numberOfEvaluations, MutationType mutation, CrossoverType crossover, FitnessType fitnessFunction) : base(topology, numberOfEvaluations, mutation, crossover, fitnessFunction)
     {
     }
 
@@ -36,7 +36,7 @@ public class GeneticIndividual : Individual
 
     public override Individual Clone()
     {
-        GeneticIndividual new_ind = new GeneticIndividual(this.topology, this.maxNumberOfEvaluations, this.mutation);
+        GeneticIndividual new_ind = new GeneticIndividual(this.topology, this.maxNumberOfEvaluations, this.mutation, this.crossover, this.fitnessFunction);
 
         genotype.CopyTo(new_ind.genotype, 0);
         new_ind.fitness = this.Fitness;
@@ -57,6 +57,8 @@ public class GeneticIndividual : Individual
             case MetaHeuristic.MutationType.Random:
                 MutateRandom(probability);
                 break;
+            case MetaHeuristic.MutationType.None:
+                throw new System.Exception("No mutation method selected!");
         }
     }
 
@@ -105,6 +107,8 @@ public class GeneticIndividual : Individual
             case MetaHeuristic.CrossoverType.TwoPoint:
                 Crossover2(partner, probability);
                 break;
+            case MetaHeuristic.CrossoverType.None:
+                throw new System.Exception("No crossover method selected!");
         }
     }
 

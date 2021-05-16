@@ -2,45 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Individual {
+public abstract class Individual
+{
 
-	protected float[] genotype;
-	protected MetaHeuristic.MutationType mutation;
+    protected float[] genotype;
+    protected MetaHeuristic.MutationType mutation;
     protected MetaHeuristic.CrossoverType crossover;
+    protected MetaHeuristic.FitnessType fitnessFunction;
     protected int[] topology;
 
-	protected int totalSize = 0;
-	protected float fitness;
+    protected int totalSize = 0;
+    protected float fitness;
     protected List<float> evaluations;
     protected bool evaluated;
-	protected NeuralNetwork network;
-	[HideInInspector]
-	protected int completedEvaluations = 0;
-	[HideInInspector]
-	protected int maxNumberOfEvaluations = 1;
+    protected NeuralNetwork network;
+    [HideInInspector]
+    protected int completedEvaluations = 0;
+    [HideInInspector]
+    protected int maxNumberOfEvaluations = 1;
 
-	public int Size
-	{
-		get { return totalSize;}
-	}
 
-	public float Fitness
-	{
-	    get { return fitness;}
-	
-	}
 
-	public float this[int i]
-	{
-		get { return genotype[i]; }
-		set { genotype[i] = value; }
-	}
+    public MetaHeuristic.FitnessType GetFitnessType()
+    {
+        return fitnessFunction;
+    }
 
-	public void SetEvaluations(float quality)
+    public int Size
+    {
+        get { return totalSize; }
+    }
+
+    public float Fitness
+    {
+        get { return fitness; }
+
+    }
+
+    public float this[int i]
+    {
+        get { return genotype[i]; }
+        set { genotype[i] = value; }
+    }
+
+    public void SetEvaluations(float quality)
     {
         evaluations.Insert(completedEvaluations, quality);
         completedEvaluations++;
-        if(completedEvaluations == maxNumberOfEvaluations)
+        if (completedEvaluations == maxNumberOfEvaluations)
         {
             completedEvaluations = 0;
             fitness = evaluations.Average();
@@ -49,50 +58,58 @@ public abstract class Individual {
     }
 
     public bool Evaluated
-	{
-		get { return evaluated;}
-	}
+    {
+        get { return evaluated; }
+    }
 
 
-	public Individual(int[] topology, int numberOfEvaluations, MetaHeuristic.MutationType mutation) {
-		for (int i = 1; i < topology.Length; i++)
-		{
-			totalSize += topology[i - 1] * topology[i];
-		}
-		this.topology = topology;
+    public Individual(int[] topology, int numberOfEvaluations, MetaHeuristic.MutationType mutation, MetaHeuristic.CrossoverType crossover, MetaHeuristic.FitnessType fitnessFunction)
+    {
+        for (int i = 1; i < topology.Length; i++)
+        {
+            totalSize += topology[i - 1] * topology[i];
+        }
+        this.topology = topology;
         fitness = 0.0f;
         maxNumberOfEvaluations = numberOfEvaluations;
         evaluations = new List<float>(numberOfEvaluations);
-		evaluated = false;
+        evaluated = false;
         completedEvaluations = 0;
-		genotype = new float[totalSize];
-		//
-		this.mutation = mutation;
-	}
+        genotype = new float[totalSize];
+        //
+        this.mutation = mutation;
+        this.crossover = crossover;
+        this.fitnessFunction = fitnessFunction;
+    }
 
 
-	public NeuralNetwork getIndividualController() {
-		network = new NeuralNetwork (topology);
-		network.map_from_linear (genotype);
-		return network;
-	}
+    public NeuralNetwork getIndividualController()
+    {
+        network = new NeuralNetwork(topology);
+        network.map_from_linear(genotype);
+        return network;
+    }
 
-	public override string ToString () {
-		if (network == null) {
-			getIndividualController ();
-		}
-		string res = "[GeneticIndividual]: [";
-		for (int i = 0; i < totalSize; i++) {
-			res += genotype [i].ToString ();
-			if (i != totalSize - 1) {
-				res += ",";
-			}
-		}
-		res += "]\n";
-		res += "Neural Network\n" + network.ToString() + "\n";
-		return res;
+    public override string ToString()
+    {
+        if (network == null)
+        {
+            getIndividualController();
+        }
+        string res = "[GeneticIndividual]: [";
+        for (int i = 0; i < totalSize; i++)
+        {
+            res += genotype[i].ToString();
+            if (i != totalSize - 1)
+            {
+                res += ",";
+            }
+        }
+        res += "]\n";
+        res += "Neural Network\n" + network.ToString() + "\n";
+        return res;
 
-	}
+    }
 
     public static float NextGaussian(float mean, float standard_deviation)
     {
@@ -117,9 +134,9 @@ public abstract class Individual {
 
 
     //override on each specific individual class
-    public abstract void Initialize ();
+    public abstract void Initialize();
     public abstract void Initialize(NeuralNetwork nn);
-    public abstract void Mutate (float probability);
-	public abstract void Crossover (Individual partner, float probability);
-	public abstract Individual Clone ();
+    public abstract void Mutate(float probability);
+    public abstract void Crossover(Individual partner, float probability);
+    public abstract Individual Clone();
 }

@@ -9,11 +9,15 @@ public class GeneticAlgorithm : MetaHeuristic
     public int tournamentSize;
 
     [Header("Red Population Parameters")]
+    public FitnessType fitnessTypeRedPopulation = FitnessType.Attacker;
+
     public float mutationProbabilityRedPopulation;
     public float crossoverProbabilityRedPopulation;
     public bool elitistRed = true;
 
     [Header("Blue Population Parameters")]
+
+    public FitnessType fitnessTypeBluePopulation = FitnessType.Defender;
     public float mutationProbabilityBluePopulation;
     public float crossoverProbabilityBluePopulation;
     public bool elitistBlue = true;
@@ -24,17 +28,20 @@ public class GeneticAlgorithm : MetaHeuristic
 
         Debug.Log("Global Settings");
         Debug.Log("     Mutation Method: " + mutationMethod);
+        Debug.Log("     Crossover Method: " + crossoverMethod);
         Debug.Log("     Selection Method: " + selectionMethod);
         Debug.Log("     Population Size: " + populationSize);
         Debug.Log("     Number of Generations: " + numberOfGenerations);
         Debug.Log("     Tournament Size: " + tournamentSize);
 
         Debug.Log("Red Population Settings");
+        Debug.Log("     Fitness Type: " + fitnessTypeRedPopulation);
         Debug.Log("     Mutation Probability: " + mutationProbabilityRedPopulation);
         Debug.Log("     Crossover Probability: " + crossoverProbabilityRedPopulation);
         Debug.Log("     Elitist: " + elitistRed);
 
         Debug.Log("Blue Population Settings");
+        Debug.Log("     Fitness Type: " + fitnessTypeBluePopulation);
         Debug.Log("     Mutation Probability: " + mutationProbabilityBluePopulation);
         Debug.Log("     Crossover Probability: " + crossoverProbabilityBluePopulation);
         Debug.Log("     Elitist: " + elitistBlue);
@@ -86,8 +93,8 @@ public class GeneticAlgorithm : MetaHeuristic
 
         while (populationRed.Count < populationSize)
         {
-            GeneticIndividual new_ind_red = new GeneticIndividual(NNTopology, GamesPerIndividualForEvaluation, mutationMethod);
-            GeneticIndividual new_ind_blue = new GeneticIndividual(NNTopology, GamesPerIndividualForEvaluation, mutationMethod);
+            GeneticIndividual new_ind_red = new GeneticIndividual(NNTopology, GamesPerIndividualForEvaluation, mutationMethod, crossoverMethod, fitnessTypeRedPopulation);
+            GeneticIndividual new_ind_blue = new GeneticIndividual(NNTopology, GamesPerIndividualForEvaluation, mutationMethod, crossoverMethod, fitnessTypeBluePopulation);
 
             if (seedPopulationFromFile)
             {

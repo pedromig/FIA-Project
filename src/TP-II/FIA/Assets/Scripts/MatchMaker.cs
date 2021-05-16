@@ -6,10 +6,11 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 
-public class MatchMaker : MonoBehaviour {
+public class MatchMaker : MonoBehaviour
+{
 
-	// instances
-	public static MatchMaker instance = null;
+    // instances
+    public static MatchMaker instance = null;
     [HideInInspector]
     public Text infoText;
     [HideInInspector]
@@ -17,8 +18,8 @@ public class MatchMaker : MonoBehaviour {
     public string PathRedPlayer;
     public string PathBluePlayer;
     public GameObject simulationPrefab;
-	private SimulationInfo bestSimulation;
-	private NeuralNetwork BlueController;
+    private SimulationInfo bestSimulation;
+    private NeuralNetwork BlueController;
     private NeuralNetwork RedController;
     [HideInInspector]
     public int TheTimeScale = 1;
@@ -30,32 +31,36 @@ public class MatchMaker : MonoBehaviour {
     public bool randomBallPosition = false;
     public bool MovingBall = false;
 
-    
 
-	void Awake(){
-		// deal with the singleton part
-		if (instance == null) {
-			instance = this;
-		}
-		else if (instance != this) {
-			DestroyImmediate (gameObject);    
-		}
-		DontDestroyOnLoad(gameObject);
-		loadPlayers ();
-		simulating = false;
 
-	}
+    void Awake()
+    {
+        // deal with the singleton part
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            DestroyImmediate(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+        loadPlayers();
+        simulating = false;
 
-	void loadPlayers() {
+    }
+
+    void loadPlayers()
+    {
         Debug.Log("Tyring to Load Blue:" + PathBluePlayer);
         if (File.Exists(PathBluePlayer))
-		{
-            
-			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Open((PathBluePlayer).Trim(), FileMode.Open);
-			this.BlueController = (NeuralNetwork) bf.Deserialize(file);
-			file.Close();
-		}
+        {
+
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open((PathBluePlayer).Trim(), FileMode.Open);
+            this.BlueController = (NeuralNetwork)bf.Deserialize(file);
+            file.Close();
+        }
         else
         {
             Debug.Log("Path to Red Player does not exist");
@@ -75,8 +80,8 @@ public class MatchMaker : MonoBehaviour {
 
     }
 
-	private SimulationInfo createSimulation(int sim_i, Rect location)
-	{
+    private SimulationInfo createSimulation(int sim_i, Rect location)
+    {
         D31NeuralControler bluePlayerScript = null;
         D31NeuralControler redPlayerScript = null;
         GameObject sim = Instantiate(simulationPrefab, transform.position + new Vector3(0, (sim_i * 250), 0), Quaternion.identity);
@@ -85,10 +90,10 @@ public class MatchMaker : MonoBehaviour {
             redPlayerScript = sim.transform.Find("D31-red").gameObject.transform.Find("Body").gameObject.GetComponent<D31NeuralControler>();
         if (sim.transform.Find("D31-blue") != null)
             bluePlayerScript = sim.transform.Find("D31-blue").gameObject.transform.Find("Body").gameObject.GetComponent<D31NeuralControler>();
-        sim.GetComponentInChildren<Camera> ().rect = location;
-		sim.transform.Find("Scoring System").gameObject.GetComponent<ScoreKeeper>().setIds(PathBluePlayer, PathRedPlayer);
+        sim.GetComponentInChildren<Camera>().rect = location;
+        sim.transform.Find("Scoring System").gameObject.GetComponent<ScoreKeeper>().setIds(PathBluePlayer, PathRedPlayer);
 
-		if (bluePlayerScript != null &&  bluePlayerScript.enabled)
+        if (bluePlayerScript != null && bluePlayerScript.enabled)
         {// BluePlayer Controller
             bluePlayerScript.neuralController = BlueController;
             bluePlayerScript.maxSimulTime = this.MatchTimeInSecs;
@@ -100,15 +105,17 @@ public class MatchMaker : MonoBehaviour {
             redPlayerScript.neuralController = RedController;
             redPlayerScript.maxSimulTime = this.MatchTimeInSecs;
             redPlayerScript.running = true;
-		}
+        }
 
-        return new SimulationInfo (sim, redPlayerScript,bluePlayerScript, 0,0);
-	}
+        return new SimulationInfo(sim, redPlayerScript, bluePlayerScript, 0, 0);
+    }
 
-	void Update () {
-        infoText.text = "Playing a match for " + this.MatchTimeInSecs +" secs";
-		// show best.. in loop
-		if (!simulating) {
+    void Update()
+    {
+        infoText.text = "Playing a match for " + this.MatchTimeInSecs + " secs";
+        // show best.. in loop
+        if (!simulating)
+        {
             // x values: -20, 20
             // z values: -25, 25
             Vector3 redPlayerStartPosition = new Vector3(Random.Range(-20, 20), 0, Random.Range(0, 20));
@@ -116,7 +123,7 @@ public class MatchMaker : MonoBehaviour {
 
 
 
-            bestSimulation = createSimulation (0, new Rect (0.0f, 0.0f, 1f, 1f));
+            bestSimulation = createSimulation(0, new Rect(0.0f, 0.0f, 1f, 1f));
 
             if (randomRedPlayerPosition)
             {
@@ -152,19 +159,22 @@ public class MatchMaker : MonoBehaviour {
             }
 
             Time.timeScale = TheTimeScale;
-			simulating = true;
+            simulating = true;
 
-		} else if (simulating) {
-			if (!bestSimulation.playerRed.running && bestSimulation.playerRed.gameOver) {
-                Debug.Log("Red score (according to current GetScoreRed fitness function): " + bestSimulation.playerRed.GetScoreRed());
-                if(bestSimulation.playerBlue != null)
-                    Debug.Log("Blue score (according to current GetScoreBlue fitness function): " + bestSimulation.playerBlue.GetScoreBlue());
+        }
+        else if (simulating)
+        {
+            if (!bestSimulation.playerRed.running && bestSimulation.playerRed.gameOver)
+            {
+                // Debug.Log("Red score (according to current GetScoreRed fitness function): " + bestSimulation.playerRed.GetScoreRed());
+                // if(bestSimulation.playerBlue != null)
+                //     Debug.Log("Blue score (according to current GetScoreBlue fitness function): " + bestSimulation.playerBlue.GetScoreBlue());
                 simulating = false;
-				DestroyImmediate (bestSimulation.sim);
-			}
-		}
-	}
-	}
+                DestroyImmediate(bestSimulation.sim);
+            }
+        }
+    }
+}
 
 
 

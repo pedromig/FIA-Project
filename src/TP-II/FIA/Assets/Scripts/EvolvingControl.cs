@@ -361,11 +361,13 @@ public class EvolvingControl : MonoBehaviour
                         // FITNESS ASSIGNMENT 
                         if (simsInfo[i].playerRed != null && !metaengine.PopulationRed[simsInfo[i].individualIndexRed].Evaluated)
                         {
-                            metaengine.PopulationRed[simsInfo[i].individualIndexRed].SetEvaluations(simsInfo[i].playerRed.GetScoreRed());
+                            Individual redPlayer = metaengine.PopulationRed[simsInfo[i].individualIndexRed];
+                            redPlayer.SetEvaluations(simsInfo[i].playerRed.GetScoreRed(redPlayer.GetFitnessType()));
                         }
                         if (simsInfo[i].playerBlue != null && !metaengine.PopulationBlue[simsInfo[i].individualIndexBlue].Evaluated)
                         {
-                            metaengine.PopulationBlue[simsInfo[i].individualIndexBlue].SetEvaluations(simsInfo[i].playerBlue.GetScoreBlue());
+                            Individual bluePlayer = metaengine.PopulationBlue[simsInfo[i].individualIndexBlue];
+                            bluePlayer.SetEvaluations(simsInfo[i].playerBlue.GetScoreBlue(bluePlayer.GetFitnessType()));
                         }
                         //
 

@@ -178,7 +178,6 @@ public class D31NeuralControler : MonoBehaviour
         sensorsInput[10] = objects["Wall"].distance / FIELD_SIZE;
         sensorsInput[11] = objects["Wall"].angle / 360.0f;
 
-        ////// 
         // Agent speed and angle with previous position
         Vector2 pp = new Vector2(previousPos.x, previousPos.z);
         Vector2 aPos = new Vector2(agent.transform.localPosition.x, agent.transform.localPosition.z);
@@ -258,6 +257,7 @@ public class D31NeuralControler : MonoBehaviour
         fixedUpdateCalls = 0;
     }
 
+
     public static float StdDev(IEnumerable<float> values)
     {
         float ret = 0;
@@ -276,14 +276,26 @@ public class D31NeuralControler : MonoBehaviour
         return ret;
     }
 
+
+    //******************************************************************************************
+    //* FITNESS FUNCTION UTILITIES 
+    //******************************************************************************************
+
+    // Cossine Law
+    // DESCRIPTION:
+    // In trigonometry, the law of cosines relates the lengths of the sides of a triangle to the cosine of one of its angles.
+    // The formula for this law is  c^2 = a^2 + b^2 - 2*a*b * cos(alpha) and it used in the fitness function as a way to 
+    // reward or penalize the agent according to the value of the angle he makes with the balls.
     private float CossineLawForAngle(float a, float b, float c)
     {
-        // For AB angle in radians ->
-        // Se a bola "entrar" na baliza ou se o agente "tocar na bola", ambos são positivos
-        if (a == 0 || b == 0) //TODO: verify if this is correct
-            return Mathf.PI; // Positive Reinforcement -> 180 degrees
+
+        // Positive Reinforcement -> 180 degrees
+        if (a == 0 || b == 0)
+            return Mathf.PI;
+
         List<float> sides = new List<float>(new float[] { a, b, c });
         sides.Sort();
+
         if (!(sides[2] < sides[0] + sides[1]))
         {
             float newValue = sides[2] - (sides[0] + sides[1]) + 0.00001f;
@@ -303,42 +315,47 @@ public class D31NeuralControler : MonoBehaviour
         return Mathf.Acos((a * a + b * b - c * c) / (2 * a * b));
     }
 
+    //******************************************************************************************
+    //* FITNESS FUNCTION IMPLEMENTATION 
+    //******************************************************************************************
 
-    //******************************************************************************************
-    //* FITNESS AND END SIMULATION CONDITIONS *// 
-    //******************************************************************************************
-    private bool endSimulationConditions()
+    // Defender fitness function
+    // This function is used as a fitness indicator for a attacker agent.
+    private float GetAttackerFitness()
     {
-        return simulationTime > this.maxSimulTime;
+        float angleDegree, orientationScore = 0;
+        float epsilon = 160, phi = 180 - epsilon;
+
+        for (int i = 0; i < distanceToBall.Count(); ++i)
+        {
+            angleDegree = (CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * 180) / Mathf.PI;
+            if (angleDegree < epsilon)
+            {
+                orientationScore += -(-1 / epsilon * angleDegree + 1);
+            }
+            else
+            {
+                orientationScore += (1 / phi * angleDegree + (-epsilon / phi));
+            }
+        }
+
+        // "Average" Score (distanceToBall.Count() for the number of the taken snapshots)
+        orientationScore = orientationScore / distanceToBall.Count();
+
+        return 50 * orientationScore
+                + 10000 * GoalsOnAdversaryGoal
+                - 10000 * GoalsOnMyGoal
+                - 7000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
+                + 5 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
+                + 5 / distancefromBallToAdversaryGoal.Average()
+                - 5 / distancefromBallToMyGoal.Average()
+                + 5 / distanceToBall.Average();
     }
-    // public float GetFitness(){
-    //     float angleDegree, orientationScore = 0;
-    //     float epsilon = 160, phi = 180 - epsilon;
 
-    //     for(int i = 0; i < distanceToBall.Count(); ++i) {
-    //         angleDegree = (CossineLawForAngle(distancefromBallToAdversaryGoal[i], distanceToBall[i], distanceToAdversaryGoal[i]) * 180) / Mathf.PI;
-    //         if (angleDegree < epsilon) {
-    //             orientationScore += -(-1/epsilon * angleDegree + 1);
-    //         } else {
-    //             orientationScore += (1/phi * angleDegree + (-epsilon/phi));
-    //         }
-    //     }
 
-    //     // "Average" Score (distanceToBall.Count() for the number of the taken snapshots)
-    //     orientationScore = orientationScore/distanceToBall.Count();
-
-    //     return    50 * orientationScore
-    //             + 10000 * GoalsOnAdversaryGoal
-    //             - 10000 * GoalsOnMyGoal
-    //             - 7000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
-    //             + 5 * (hitTheBall > 0 ? Mathf.Log10(hitTheBall) : 0)
-    //             + 5 / distancefromBallToAdversaryGoal.Average()
-    //             - 5 / distancefromBallToMyGoal.Average()
-    //             + 5 / distanceToBall.Average();
-    // }
-
-    /* Defender - Attempt 1 */
-    public float GetFitness()
+    // Defender fitness function
+    // This function is used as a fitness indicator for a defender agent.
+    private float GetDefenderFitness()
     {
         float angleDegree, orientationScore = 0;
         float epsilon = 175, phi = 180 - epsilon;
@@ -370,16 +387,55 @@ public class D31NeuralControler : MonoBehaviour
     }
 
 
-    // Fitness function for the Blue player. The code to attribute fitness to individuals should be written here. 
-    public float GetScoreBlue()
+    // Experimental fitness function
+    // This function is used to test ideias for a fitness function. Override it so it fits your needs.
+    private float GetExperimentalFitness()
     {
-        return GetFitness();
+        return 2000 * GoalsOnAdversaryGoal
+               + 500 * hitTheBall
+               + 50 / distanceToBall.Average()
+               + 50 / distanceToAdversaryGoal.Average()
+               + 50 * avgSpeed
+               - 2000 * GoalsOnMyGoal
+               - 1000 * (GoalsOnAdversaryGoal == 0 ? 1 : 0)
+               - 500 * hitTheWall;
     }
 
-    // Fitness function for the Red player. The code to attribute fitness to individuals should be written here. 
-    public float GetScoreRed()
+    //******************************************************************************************
+    //* FITNESS AND END SIMULATION CONDITIONS 
+    //******************************************************************************************
+    private bool endSimulationConditions()
     {
-        return GetFitness();
+        return simulationTime > this.maxSimulTime;
+    }
+
+    // Fitness function selection
+    private float GetFitness(MetaHeuristic.FitnessType fitnessFunction)
+    {
+        switch (fitnessFunction)
+        {
+            case MetaHeuristic.FitnessType.Attacker:
+                return GetAttackerFitness();
+            case MetaHeuristic.FitnessType.Defender:
+                return GetDefenderFitness();
+            case MetaHeuristic.FitnessType.Experimental:
+                return GetExperimentalFitness();
+            case MetaHeuristic.FitnessType.None:
+                throw new System.Exception("404 fitness function not found");
+        }
+        return -float.MinValue;
+    }
+
+    // Fitness function for the Blue player
+    public float GetScoreBlue(MetaHeuristic.FitnessType fitnessFunction)
+    {
+        return GetFitness(fitnessFunction);
+    }
+
+    // Fitness function for the Red player
+    public float GetScoreRed(MetaHeuristic.FitnessType fitnessFunction)
+    {
+        return GetFitness(fitnessFunction);
     }
 
 }

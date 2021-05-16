@@ -9,8 +9,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 public abstract class MetaHeuristic : MonoBehaviour
 {
 
-    public enum MutationType { Gaussian, Random };
-    public enum CrossoverType { OnePoint, TwoPoint };
+    public enum MutationType { Gaussian, Random, None };
+    public enum CrossoverType { OnePoint, TwoPoint, None };
+
+    public enum FitnessType { Attacker, Defender, Experimental, None };
+
     public MutationType mutationMethod = MutationType.Gaussian;
     public CrossoverType crossoverMethod = CrossoverType.OnePoint;
 
